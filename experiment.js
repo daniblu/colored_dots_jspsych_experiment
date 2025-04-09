@@ -317,7 +317,7 @@ for (let condition of randomized_conditions) {
                 const rule_frame = {
                     type: jsPsychSurveyText,
                     questions: [
-                        {prompt: "Briefly write your best guess(es) of what you think the secret rule is at this point.", rows: 4, columns: 60}
+                        {prompt: "Briefly write your best guess(es) of what you think (part of) the secret rule is at this point. If you have no idea, you may leave the field empty.", rows: 4, columns: 60}
                     ],
                     on_finish: function(data) {
                         trial_data.rule_guess = data.response.Q0;
@@ -372,7 +372,6 @@ for (let condition of randomized_conditions) {
             //     trial_duration: 2000,
             // };
 
-            //another version of a feedback_frame that shows drawDots(c, test_stimuli_2[i]) at the top of the screen, and the feedback text below
             const feedback_frame = {
                 type: jsPsychCanvasKeyboardResponse,
                 canvas_size: [500, 500],
@@ -401,7 +400,7 @@ for (let condition of randomized_conditions) {
                 const rule_frame = {
                     type: jsPsychSurveyText,
                     questions: [
-                        {prompt: "Briefly write your best guess(es) of what you think the secret rule is at this point.", rows: 4, columns: 60}
+                        {prompt: "Briefly write your best guess(es) of what you think (part of) the secret rule is at this point. If you have no idea, you may leave the field empty.", rows: 4, columns: 60}
                     ],
                     on_finish: function(data) {
                         trial_data.rule_guess = data.response.Q0;
