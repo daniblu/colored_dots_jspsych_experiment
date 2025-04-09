@@ -26,12 +26,12 @@ const participant_id = jsPsych.randomization.randomID(10);
 const conditions = [1, 2];
 const randomized_conditions = jsPsych.randomization.shuffle(conditions);
 
-const learning_stimuli = [["red", "green", "blue"], ["red", "red", "green"], ["red", "green", "blue"], ["red", "red", "green"]];
-const learning_correct = ["green", "red", "green", "red"];
-const test_stimuli_1 = [["green", "green", "blue"], ["green", "blue", "green"], ["green", "green", "blue"], ["green", "blue", "green"]];
-const test_correct_1 = ["green", "green", "green", "green"];
-const test_stimuli_2 = [["red", "red", "blue"], ["red", "blue", "red"], ["red", "red", "blue"], ["red", "blue", "red"]];
-const test_correct_2 = ["red", "red", "red", "red"];
+const learning_stimuli = [['red', 'green', 'green'], ['blue', 'blue', 'green'], ['green', 'blue', 'green'], ['green', 'blue', 'green'], ['red', 'red', 'green'], ['green', 'red', 'red'], ['red', 'blue', 'green'], ['red', 'red', 'green'], ['red', 'red', 'blue'], ['blue', 'red', 'blue']];
+const learning_correct = ['green', 'green', 'green', 'green', 'red', 'green', 'green', 'red', 'red', 'blue'];
+const test_stimuli_1 = [['green', 'red', 'blue'], ['green', 'green', 'blue'], ['blue', 'red', 'blue'], ['red', 'green', 'green'], ['red', 'red', 'blue'], ['red', 'red', 'green'], ['red', 'green', 'red'], ['blue', 'green', 'blue'], ['red', 'green', 'blue'], ['red', 'blue', 'green']];
+const test_correct_1 = ['green', 'green', 'blue', 'green', 'red', 'red', 'green', 'green', 'green', 'green'];
+const test_stimuli_2 = [['blue', 'blue', 'green'], ['red', 'red', 'blue'], ['green', 'green', 'red'], ['green', 'blue', 'green'], ['green', 'red', 'blue'], ['blue', 'green', 'green'], ['blue', 'red', 'blue'], ['blue', 'green', 'blue'], ['blue', 'blue', 'green'], ['green', 'green', 'blue']];
+const test_correct_2 = ['blue', 'red', 'red', 'blue', 'green', 'green', 'blue', 'blue', 'blue', 'green'];
 
 const press_space_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to continue</b></p>";
 const press_RGB_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press R, G, or B</b></p>";
@@ -239,7 +239,7 @@ const demo_trial_loop = {
   }
 };
 
-//timeline.push(demo_trial_loop);
+timeline.push(demo_trial_loop);
 
 // Loop through each trial
 for (let condition of randomized_conditions) {
