@@ -361,16 +361,32 @@ for (let condition of randomized_conditions) {
                 }
             };
 
+            // const feedback_frame = {
+            //     type: jsPsychHtmlKeyboardResponse,
+            //     stimulus: function() {
+            //         // return "Your response: " + trial_data.test_response + lineBreak + "Correct answer: " + trial_data.test_correct; (the color words should be colored)
+            //         return `<p>Your response: <b style="color:${trial_data.test_response};">${trial_data.test_response}</b></p>` +
+            //             `<p>Correct answer: <b style="color:${trial_data.test_correct};">${trial_data.test_correct}</b></p>`;
+            //     },
+            //     choices: 'NO_KEYS',
+            //     trial_duration: 2000,
+            // };
+
+            //another version of a feedback_frame that shows drawDots(c, test_stimuli_2[i]) at the top of the screen, and the feedback text below
             const feedback_frame = {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: function() {
-                    // return "Your response: " + trial_data.test_response + lineBreak + "Correct answer: " + trial_data.test_correct; (the color words should be colored)
-                    return `<p>Your response: <b style="color:${trial_data.test_response};">${trial_data.test_response}</b></p>` +
-                        `<p>Correct answer: <b style="color:${trial_data.test_correct};">${trial_data.test_correct}</b></p>`;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 500;
+                    canvas.height = 500;
+                    drawDots(canvas, test_stimuli_2[i]);
+                    const response_color_name = trial_data.test_response;
+                    return `<div style="text-align: center;">${canvas.outerHTML}</div>` +
+                        `<p>Your response: <b style="color:${response_color_name};">${response_color_name}<b></p>` +
+                        `<p>Correct answer: <b style="color:${trial_data.test_correct};">${trial_data.test_correct}</b></p>${press_space_text}`;
                 },
-                choices: 'NO_KEYS',
-                trial_duration: 2000,
-            };
+                choices: [' ']
+            }; 
 
             const certainty_frame = {
                 type: jsPsychHtmlKeyboardResponse,
