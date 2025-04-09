@@ -1,3 +1,5 @@
+// https://daniblu.github.io/colored_dots_jspsych_experiment/
+
 // Initialize jsPsych
 const jsPsych = initJsPsych({
     on_finish: function() {
@@ -70,6 +72,12 @@ const instructions = {type: jsPsychInstructions,
     '<p style="text-align: left;">The secret rule always has the same structure. That is, one of the dot locations (left, top or right) will always serve as a cue for which dot has the correct color, and each color of the cue will always uniquely refer to one of the three dots (for example, if the cue dot is green, that will always refer to the left dot).</p>' + '<p style="text-align: left;">On the following pages, you will get to familiarize yourself with the task. You will get told what the rule is, and must indicate the correct color based on it.</p>' + '<p></p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>'
     ],
 }
+
+const post_demo_instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual experiment will follow on the next page.</p>${press_space_text}`,
+    choices: [' ']
+};
 
 const condition_1_instructions = {
     type: jsPsychHtmlKeyboardResponse,
@@ -239,7 +247,7 @@ const demo_trial_loop = {
   }
 };
 
-timeline.push(demo_trial_loop);
+timeline.push(demo_trial_loop, post_demo_instructions);
 
 // Loop through each trial
 for (let condition of randomized_conditions) {
