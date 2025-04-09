@@ -65,8 +65,8 @@ const cursor_on = {
 const instructions = {type: jsPsychInstructions,
     pages: [
     '<p style="text-align: left;">In this experiment, you will be shown sets of three colored dots. Your task is to choose the correct color. The dots will be red, blue, or green, and dots of the same color can appear together. There is a secret rule that enables you to identify the correct color among the three dots.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">→</p>',
-    '<img src="example_stimulus_1.png", style="width: 315px; height: 250px;" ></img>' + '<br>' + '<p style="text-align: left;">Here is an example of a set of dots. For instance, the secret rule could be that the color of the top dot, always tells you which dot has the correct color. The rule further dictates that if the top dot is green, the left dot has the correct color. If it is red, the top dot has the correct color, and if it is blue, the right dot has the correct color. Given this rule, the correct color in this case would be red.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
-    '<img src="example_stimulus_2.png", style="width: 315px; height: 250px;" ></img>' + '<br>' + '<p style="text-align: left;">Here is another example of a set of dots. Given the same rule as before (you may go back and remind yourself), the correct color in this case would be red.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
+    '<img src="images/example_stimulus_1.png", style="width: 315px; height: 250px;" ></img>' + '<br>' + '<p style="text-align: left;">Here is an example of a set of dots. For instance, the secret rule could be that the color of the top dot, always tells you which dot has the correct color. The rule further dictates that if the top dot is green, the left dot has the correct color. If it is red, the top dot has the correct color, and if it is blue, the right dot has the correct color. Given this rule, the correct color in this case would be red.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
+    '<img src="images/example_stimulus_2.png", style="width: 315px; height: 250px;" ></img>' + '<br>' + '<p style="text-align: left;">Here is another example of a set of dots. Given the same rule as before (you may go back and remind yourself), the correct color in this case would be red.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
     '<p style="text-align: left;">The secret rule always has the same structure. That is, one of the dot locations (left, top or right) will always serve as a cue for which dot has the correct color, and each color of the cue will always uniquely refer to one of the three dots (for example, if the cue dot is green, that will always refer to the left dot).</p>' + '<p style="text-align: left;">On the following pages, you will get to familiarize yourself with the task. You will get told what the rule is, and must indicate the correct color based on it.</p>' + '<p></p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>'
     ],
 }
@@ -273,7 +273,7 @@ for (let condition of randomized_conditions) {
 
             const certainty_frame = {
                 type: jsPsychHtmlKeyboardResponse,
-                stimulus: `<p>How well do you feel you know the secret rule?</p><img src="certainty_scale.png" style="width: 570px; height: 100px;"></img>`,
+                stimulus: `<p>How well do you feel you know the secret rule?</p><img src="images/certainty_scale.png" style="width: 570px; height: 100px;"></img>`,
                 choices: ['1', '2', '3', '4', '5'],
                 on_finish: function(data) {
                     trial_data.certainty = data.response;
@@ -366,7 +366,7 @@ for (let condition of randomized_conditions) {
 
             const certainty_frame = {
                 type: jsPsychHtmlKeyboardResponse,
-                stimulus: '<p>How well do you feel you know the secret rule?</p><img src="certainty_scale.png" style="width: 570px; height: 100px;"></img>',
+                stimulus: '<p>How well do you feel you know the secret rule?</p><img src="images/certainty_scale.png" style="width: 570px; height: 100px;"></img>',
                 choices: ['1', '2', '3', '4', '5'],
                 on_finish: function(data) {
                     trial_data.certainty = data.response;
