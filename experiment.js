@@ -142,7 +142,7 @@ function rgbToColorName(key) {
 
 
 function generateNewDemoTrial() {
-    const colors = Array.from({length: 3}, () => jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 1)[0]);
+    const colors = jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 3);
     const positions = ['LEFT', 'TOP', 'RIGHT'];
     const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
     let shuffled_positions = jsPsych.randomization.shuffle(positions);
