@@ -95,7 +95,7 @@ const black_frame = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: '',
     choices: 'NO_KEYS',
-    trial_duration: 1000
+    trial_duration: 700
 };
 
 const exit_fullscreen = {
