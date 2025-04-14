@@ -42,6 +42,7 @@ const test_stimuli_2 = [['red', 'green', 'green'], ['blue', 'red', 'red'], ['blu
 const test_correct_2 = ['green', 'red', 'blue', 'blue', 'red', 'red', 'blue', 'blue', 'red', 'red', 'blue', 'red', 'red', 'red', 'red', 'green', 'blue', 'blue', 'blue', 'blue', 'red', 'green', 'green', 'red', 'green', 'red', 'blue', 'blue', 'red', 'red', 'green', 'red', 'blue', 'red', 'red', 'red', 'green', 'red', 'green', 'blue'];
 
 const press_space_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to continue</b></p>";
+const press_space_start_text = "<p><b style='font-size:20px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to START</b></p>";
 const press_RGB_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press R, G, or B</b></p>";
 
 const informed_consent_text = "<p style='text-align: left; font-size:13px;'>I voluntarily agree to participate in this study by engaging in a behavioral task and providing responses to the follow-up questions. I am informed that the experiment is hosted via GitHub Pages and all data is transmitted securely to a Google Sheet using Google Apps Script, where the data is stored temporarily in accordance with standard data protection practices on Google's cloud infrastructure. I am informed that the data will be analyzed anonymously by Aarhus University. I acknowledge that no personally identifiable information will be collected. I agree that my anonymized data may be used for research purposes and stored for a minimum of 10 years. I have had sufficient time to consider my participation and am prepared to proceed with the study. I understand that my participation is voluntary, and I may withdraw at any time during the study without needing to provide a reason, and this will have no negative consequences for me. I have carefully read the study’s participant information and this consent declaration.</p><p style='text-align: left; font-size:13px;'>ONCE YOU CLICK THE CONSENT BUTTON, THE EXPERIMENT WILL GO INTO FULLSCREEN. YOU CAN EXIT AT ANY TIME BY PRESSING ESC.</p>"
@@ -87,13 +88,13 @@ const post_demo_instructions = {
 
 const condition_1_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">A new secret rule has now been set. It will remain unchanged throughout the following rounds. Here is how each round will proceed: You will be shown three dots and you will be told which color is correct. Based on this, you must try to identify the secret rule. In each round, your understanding of the secret rule will be tested on a different set of dots. You should strive to get as many correct responses as possible, although you will not be told whether your response was correct or incorrect. There is no time limit.</p>${press_space_text}`,
+    stimulus: `<p style="text-align: left;">A new secret rule has now been set. It will remain unchanged throughout the following rounds. Here is how each round will proceed: You will be shown three dots and you will be told which color is correct. Based on this, you must try to identify the secret rule. In each round, your understanding of the secret rule will be tested on a different set of dots. You should strive to get as many correct responses as possible, although you will not be told whether your response was correct or incorrect. There is no time limit.</p>${press_space_start_text}`,
     choices: [' ']
 };
 
 const condition_2_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">A new secret rule has now been set. It will remain unchanged throughout the following rounds. Here is how each round will proceed: You will see three dots and must report which color you think is the correct one. Based on the feedback, you must try to identify the secret rule. You should strive to get as many correct responses as possible. There is no time limit.</p>${press_space_text}`,
+    stimulus: `<p style="text-align: left;">A new secret rule has now been set. It will remain unchanged throughout the following rounds. Here is how each round will proceed: You will see three dots and must report which color you think is the correct one. Based on the feedback, you must try to identify the secret rule. You should strive to get as many correct responses as possible. There is no time limit.</p>${press_space_start_text}`,
     choices: [' ']
 };
 
