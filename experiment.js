@@ -301,7 +301,7 @@ const demo_trial_loop = {
   }
 };
 
-//timeline.push(demo_trial_loop, post_demo_instructions);
+timeline.push(demo_trial_loop, post_demo_instructions);
 
 // Loop through each trial
 for (let condition of randomized_conditions) {
