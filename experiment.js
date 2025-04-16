@@ -111,9 +111,9 @@ function generateNewDemoTrial() {
 
     const prompt = `
         <p>The cue is the <strong>${cue_location}</strong> dot.</p>
-        <p>A green cue refers to the <strong>${color_map.green}</strong> dot, 
-        a red cue refers to the <strong>${color_map.red}</strong> dot, 
-        and a blue cue refers to the <strong>${color_map.blue}</strong> dot.</p>
+        <p>If the cue is green, it refers to the <strong>${color_map.green}</strong> dot. 
+        If the cue is red it refers to the <strong>${color_map.red}</strong> dot, 
+        and if the cue is blue it refers to the <strong>${color_map.blue}</strong> dot.</p>
         <p>Given this rule, please indicate the correct color.</p>
     `;
 
