@@ -184,7 +184,7 @@ const instructions = {type: jsPsychInstructions,
 
 const post_demo_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual experiment will follow on the next page. Please note, that you are not allowed to write anything down to aid you in this experiment.</p>${press_space_text}`,
+    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual experiment will follow on the next page. Please note, that you are not allowed to write anything down to aid yourself in this experiment.</p>${press_space_text}`,
     choices: [' ']
 };
 
