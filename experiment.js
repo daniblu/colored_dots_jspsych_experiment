@@ -29,9 +29,10 @@ function drawDots(canvas, colors) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     let positions = [
-        {x: canvas.width / 4 - 40, y: (canvas.height * 3) / 4}, // Bottom-left dot
-        {x: canvas.width / 2, y: canvas.height / 4},  // Top dot
-        {x: (canvas.width * 3) / 4 + 40, y: (canvas.height * 3) / 4} // Bottom-right dot
+        {x: canvas.width / 2, y: canvas.height / 4 - 30},  // Top dot
+        {x: (canvas.width * 3) / 4 + 30, y: canvas.height /2 }, // Right dot
+        {x: canvas.width / 2, y: (canvas.height * 3) / 4 + 30}, // Bottom dot
+        {x: canvas.width / 4 - 30, y: canvas.height / 2} // Left dot
     ];
     
     for (let i = 0; i < colors.length; i++) {
@@ -44,23 +45,25 @@ function drawDots(canvas, colors) {
     }
 }   
 
-function rgbToColorName(key) {
-    if (key === 'r') return 'red';
+function keyToColorName(key) {
+    if (key === 'y') return 'yellow';
     if (key === 'g') return 'green';
     if (key === 'b') return 'blue';
+    if (key === 'v') return 'violet';
     return 'SCRIPT ERROR';
   }
 
 function sampleSecretRule() {
 
-    const positions = [0,1,2]; // 0 = left, 1 = top, 2 = right
+    const positions = [0,1,2,3]; // 0 = top, 1 = right, 2 = bottom, 3 = left
     const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
 
     const shuffled_positions = jsPsych.randomization.shuffle(positions);
     const color_map = {
-        red: shuffled_positions[0],
+        yellow: shuffled_positions[0],
         green: shuffled_positions[1],
         blue: shuffled_positions[2],
+        violet: shuffled_positions[3],
     };
 
     return {cue_location, color_map};
@@ -70,7 +73,7 @@ function generateStimuli(n_trials) {
 
     const stimuli = [];
     for (let i = 0; i < n_trials; i++) {
-        const colors = jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 3);
+        const colors = jsPsych.randomization.sampleWithoutReplacement(['yellow', 'yellow', 'green', 'green', 'blue', 'blue', 'violet', 'violet'], 4);
         stimuli.push(colors);
     }
     
@@ -91,19 +94,21 @@ function determineCorrectColor(stimuli, cue_location, color_map) {
 }
 
 function generateNewDemoTrial() {
-    const colors = jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 3);
-    const positions = ['LEFT', 'TOP', 'RIGHT'];
+    const colors = jsPsych.randomization.sampleWithoutReplacement(['yellow', 'yellow', 'green', 'green', 'blue', 'blue', 'violet', 'violet'], 4);
+    const positions = ['TOP', 'RIGHT', 'BOTTOM', 'LEFT'];
     const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
     let shuffled_positions = jsPsych.randomization.shuffle(positions);
     let color_map = {
-        green: shuffled_positions[0],
-        red: shuffled_positions[1],
+        yellow: shuffled_positions[0],
+        green: shuffled_positions[1],
         blue: shuffled_positions[2],
+        violet: shuffled_positions[3],
     };
     let dot_positions = {
-        LEFT: 0,
-        TOP: 1,
-        RIGHT: 2
+        TOP: 0,
+        RIGHT: 1,
+        BOTTOM: 2,
+        LEFT: 3,
     };
     let cue_color = colors[dot_positions[cue_location]];
     let target_location = color_map[cue_color];
@@ -111,9 +116,10 @@ function generateNewDemoTrial() {
 
     const prompt = `
         <p>The cue is the <strong>${cue_location}</strong> dot.</p>
-        <p>If the cue is green, it refers to the <strong>${color_map.green}</strong> dot. 
-        If the cue is red it refers to the <strong>${color_map.red}</strong> dot, 
-        and if the cue is blue it refers to the <strong>${color_map.blue}</strong> dot.</p>
+        <p>If the cue is <b style='color:yellow'>yellow</b>, it refers to the <strong>${color_map.yellow}</strong> dot.
+        If the cue is <b style='color:green'>green</b>, it refers to the <strong>${color_map.green}</strong> dot. 
+        If the cue is <b style='color:blue'>blue</b>, it refers to the <strong>${color_map.blue}</strong> dot, 
+        and if the cue is <b style='color:violet'>violet</b> it refers to the <strong>${color_map.violet}</strong> dot.</p>
         <p>Given this rule, please indicate the correct color.</p>
     `;
 
@@ -145,7 +151,7 @@ const test_correct_2 = determineCorrectColor(test_stimuli_2, secret_rule_2.cue_l
 
 const press_space_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to continue</b></p>";
 const press_space_start_text = "<p><b style='font-size:20px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to START</b></p>";
-const press_RGB_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press R, G, or B</b></p>";
+const press_YGBV_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press Y, G, B, or V</b></p>";
 
 const informed_consent_text = "<p style='text-align: left; font-size:13px;'>I voluntarily agree to participate in this study by engaging in a behavioral task and providing responses to the follow-up questions. I am informed that the experiment is hosted via GitHub Pages and all data is transmitted securely to a Google Sheet using Google Apps Script, where the data is stored temporarily in accordance with standard data protection practices on Google's cloud infrastructure. I am informed that the data will be analyzed anonymously by Aarhus University. I acknowledge that no personally identifiable information will be collected. I agree that my anonymized data may be used for research purposes and stored for a minimum of 10 years. I have had sufficient time to consider my participation and am prepared to proceed with the study. I understand that my participation is voluntary, and I may withdraw at any time during the study without needing to provide a reason, and this will have no negative consequences for me. I have carefully read the study’s participant information and this consent declaration.</p><p style='text-align: left; font-size:13px;'>ONCE YOU CLICK THE CONSENT BUTTON, THE EXPERIMENT WILL GO INTO FULLSCREEN. YOU CAN EXIT AT ANY TIME BY PRESSING ESC.</p>"
 
@@ -175,11 +181,12 @@ const cursor_on = {
 
 const instructions = {type: jsPsychInstructions,
     pages: [
-    '<p style="text-align: left;">In this experiment, you will be shown sets of three colored dots. Your task is to choose the correct color. The dots will be red, blue, or green, and dots of the same color can appear together. There is a secret rule that enables you to identify the correct color among the three dots.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">→</p>',
-    '<img src="images/example_stimulus_1.png", style="width: 315px; height: 250px;" ></img>' + '<br>' + '<p style="text-align: left;">Here is an example of a set of dots. For instance, the secret rule could be that the color of the top dot, always tells you which dot has the correct color. The rule further dictates that if the top dot is green, the left dot has the correct color. If it is red, the top dot has the correct color, and if it is blue, the right dot has the correct color. Given this rule, the correct color in this case would be red.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
-    '<img src="images/example_stimulus_2.png", style="width: 315px; height: 250px;" ></img>' + '<br>' + '<p style="text-align: left;">Here is another example of a set of dots. Given the same rule as before (you may go back and remind yourself), the correct color in this case would be red.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
-    '<p style="text-align: left;">The secret rule always has the same structure. That is, one of the dot locations (left, top or right) will always serve as a cue for which dot has the correct color, and each color of the cue will always uniquely refer to one of the three dots (for example, if the cue dot is green, that will always refer to the left dot).</p>' + '<p style="text-align: left;">On the following pages, you will get to familiarize yourself with the task. You will get told what the rule is, and must indicate the correct color based on it.</p>' + '<p></p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>'
+    '<p style="text-align: left;">In this experiment, you will be shown sets of four colored dots. Your task is to choose the correct color. The dots will be <b style="color:yellow;">yellow</b>, <b style="color:green;">green</b>, <b style="color:blue;">blue</b>, or <b style="color:violet;">violet</b>, and dots of the same color can appear together. There is a secret rule that enables you to identify the correct color among the four dots.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">→</p>',
+    '<img src="images/example_stimulus_4_1.png", style="width:355px; height:346px"></img>' + '<p style="text-align: left;">Here is an example of a set of dots. For instance, the secret rule could be that the color of the bottom dot, always tells you which dot has the correct color. The rule further dictates that if the bottom dot (the cue) is yellow, the left dot has the correct color. If it is green, the top dot has the correct color. If it is blue, the right dot has the correct color, and if it is violet, the bottom dot has the correct color. Given this rule, the correct color in this case would be green.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
+    '<img src="images/example_stimulus_4_2.png", style="width:357px; height:347px"></img>' + '<p style="text-align: left;">Here is another example of a set of dots. Given the same rule as before (you may go back and remind yourself), the correct color in this case would be yellow.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
+    '<p style="text-align: left;">The secret rule always has the same structure. That is, one of the dot locations (top, bottom, right, or left ) will always serve as a cue for which dot has the correct color, and each color of the cue will always uniquely refer to one of the four dots (for example, if the cue dot is green, that will always refer to the left dot).</p>' + '<p style="text-align: left;">On the following pages, you will get to familiarize yourself with the task. You will get told what the rule is, and must indicate the correct color based on it.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>'
     ],
+    // 3 dot image scale: style="width: 315px; height: 250px;"
 }
 
 const post_demo_instructions = {
@@ -232,9 +239,9 @@ let correctStreak = 0;
 
 // Dummy initial trial data — real data will be generated dynamically
 const dummy_trial = {
-  colors: ['red', 'green', 'blue'],
+  colors: ['blue', 'blue', 'blue', 'blue'],
   prompt: '',
-  correct_color: 'green'
+  correct_color: 'blue'
 };
 
 const demo_trial_loop = {
@@ -248,9 +255,9 @@ const demo_trial_loop = {
     },
     prompt: function() {
       const trial = jsPsych.timelineVariable('trial');
-      return trial.prompt + press_RGB_text;
+      return trial.prompt + press_YGBV_text;
     },
-    choices: ['r', 'g', 'b'],
+    choices: ['y', 'g', 'b', 'v'],
     on_start: function(trial) {
       const newTrial = generateNewDemoTrial();
       trial.data = {
@@ -261,16 +268,17 @@ const demo_trial_loop = {
       trial.stimulus = function(c) {
         drawDots(c, newTrial.colors);
       };
-      trial.prompt = newTrial.prompt + press_RGB_text;
+      trial.prompt = newTrial.prompt + press_YGBV_text;
     },
     on_finish: function(data) {
       const correct = (
-        (data.response === 'r' && data.correct_color === 'red') ||
+        (data.response === 'y' && data.correct_color === 'yellow') ||
         (data.response === 'g' && data.correct_color === 'green') ||
-        (data.response === 'b' && data.correct_color === 'blue')
+        (data.response === 'b' && data.correct_color === 'blue') ||
+        (data.response === 'v' && data.correct_color === 'violet')
       );
       data.correct = correct;
-      data.response_color = rgbToColorName(data.response);
+      data.response_color = keyToColorName(data.response);
       if (correct) {
         correctStreak++;
       } else {
@@ -293,7 +301,7 @@ const demo_trial_loop = {
   }
 };
 
-timeline.push(demo_trial_loop, post_demo_instructions);
+//timeline.push(demo_trial_loop, post_demo_instructions);
 
 // Loop through each trial
 for (let condition of randomized_conditions) {
@@ -338,10 +346,10 @@ for (let condition of randomized_conditions) {
                 type: jsPsychCanvasKeyboardResponse,
                 canvas_size: [500, 500],
                 stimulus: function(c) { drawDots(c, test_stimuli_1[i]); },
-                choices: ['r', 'g', 'b'],
-                prompt: `<p>Which color is correct?</p>${press_RGB_text}`,
+                choices: ['y', 'g', 'b', 'v'],
+                prompt: `<p>Which color is correct?</p>${press_YGBV_text}`,
                 on_finish: function(data) {
-                    trial_data.test_response = rgbToColorName(data.response);
+                    trial_data.test_response = keyToColorName(data.response);
                     trial_data.rt_test = data.rt;
                 }
             };
@@ -399,10 +407,10 @@ for (let condition of randomized_conditions) {
                 type: jsPsychCanvasKeyboardResponse,
                 canvas_size: [500, 500],
                 stimulus: function(c) { drawDots(c, test_stimuli_2[i]); },
-                choices: ['r', 'g', 'b'],
-                prompt: `<p>Which color is correct?</p>${press_RGB_text}`,
+                choices: ['y', 'g', 'b', 'v'],
+                prompt: `<p>Which color is correct?</p>${press_YGBV_text}`,
                 on_finish: function(data) {
-                    trial_data.test_response = rgbToColorName(data.response);
+                    trial_data.test_response = keyToColorName(data.response);
                     trial_data.rt_test = data.rt;
                 }
             };
