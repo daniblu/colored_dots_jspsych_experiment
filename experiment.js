@@ -22,24 +22,126 @@ const jsPsych = initJsPsych({
 const timeline = [];
 
 
+////// FUNCTIONS //////
+
+function drawDots(canvas, colors) {
+    let ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    let positions = [
+        {x: canvas.width / 4 - 40, y: (canvas.height * 3) / 4}, // Bottom-left dot
+        {x: canvas.width / 2, y: canvas.height / 4},  // Top dot
+        {x: (canvas.width * 3) / 4 + 40, y: (canvas.height * 3) / 4} // Bottom-right dot
+    ];
+    
+    for (let i = 0; i < colors.length; i++) {
+        ctx.beginPath();
+        ctx.arc(positions[i].x, positions[i].y, 30, 0, Math.PI * 2);
+        ctx.fillStyle = colors[i];
+        ctx.strokeStyle = colors[i];
+        ctx.fill();
+        ctx.stroke();
+    }
+}   
+
+function rgbToColorName(key) {
+    if (key === 'r') return 'red';
+    if (key === 'g') return 'green';
+    if (key === 'b') return 'blue';
+    return 'SCRIPT ERROR';
+  }
+
+function sampleSecretRule() {
+
+    const positions = [0,1,2]; // 0 = left, 1 = top, 2 = right
+    const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
+
+    const shuffled_positions = jsPsych.randomization.shuffle(positions);
+    const color_map = {
+        red: shuffled_positions[0],
+        green: shuffled_positions[1],
+        blue: shuffled_positions[2],
+    };
+
+    return {cue_location, color_map};
+}
+
+function generateStimuli(n_trials) {
+
+    const stimuli = [];
+    for (let i = 0; i < n_trials; i++) {
+        const colors = jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 3);
+        stimuli.push(colors);
+    }
+    
+    return stimuli;
+}
+
+function determineCorrectColor(stimuli, cue_location, color_map) {
+
+    const correct_colors = [];
+    for (let i = 0; i < stimuli.length; i++) {
+        const stimulus = stimuli[i];
+        const cue_color = stimulus[cue_location];
+        const target_location = color_map[cue_color];
+        const correct_color = stimulus[target_location];
+        correct_colors.push(correct_color);
+    }
+    return correct_colors;
+}
+
+function generateNewDemoTrial() {
+    const colors = jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 3);
+    const positions = ['LEFT', 'TOP', 'RIGHT'];
+    const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
+    let shuffled_positions = jsPsych.randomization.shuffle(positions);
+    let color_map = {
+        green: shuffled_positions[0],
+        red: shuffled_positions[1],
+        blue: shuffled_positions[2],
+    };
+    let dot_positions = {
+        LEFT: 0,
+        TOP: 1,
+        RIGHT: 2
+    };
+    let cue_color = colors[dot_positions[cue_location]];
+    let target_location = color_map[cue_color];
+    let correct_color = colors[dot_positions[target_location]];
+
+    const prompt = `
+        <p>The cue is the <strong>${cue_location}</strong> dot.</p>
+        <p>A green cue refers to the <strong>${color_map.green}</strong> dot, 
+        a red cue refers to the <strong>${color_map.red}</strong> dot, 
+        and a blue cue refers to the <strong>${color_map.blue}</strong> dot.</p>
+        <p>Given this rule, please indicate the correct color.</p>
+    `;
+
+    return {
+        colors,
+        prompt,
+        correct_color
+    };
+}
+
+
 ///// DEFINE CONSTANTS OF THE EXPERIMENT /////
 
+const N = 40
 const participant_id = jsPsych.randomization.randomID(10);
 const conditions = [1, 2];
 const randomized_conditions = jsPsych.randomization.shuffle(conditions);
 
-// const learning_stimuli = [['red', 'green', 'green'], ['blue', 'blue', 'green'], ['green', 'blue', 'green'], ['green', 'blue', 'green'], ['red', 'red', 'green'], ['green', 'red', 'red'], ['red', 'blue', 'green'], ['red', 'red', 'green'], ['red', 'red', 'blue'], ['blue', 'red', 'blue']];
-// const learning_correct = ['green', 'green', 'green', 'green', 'red', 'green', 'green', 'red', 'red', 'blue'];
-// const test_stimuli_1 = [['green', 'red', 'blue'], ['green', 'green', 'blue'], ['blue', 'red', 'blue'], ['red', 'green', 'green'], ['red', 'red', 'blue'], ['red', 'red', 'green'], ['red', 'green', 'red'], ['blue', 'green', 'blue'], ['red', 'green', 'blue'], ['red', 'blue', 'green']];
-// const test_correct_1 = ['green', 'green', 'blue', 'green', 'red', 'red', 'green', 'green', 'green', 'green'];
-// const test_stimuli_2 = [['blue', 'blue', 'green'], ['red', 'red', 'blue'], ['green', 'green', 'red'], ['green', 'blue', 'green'], ['green', 'red', 'blue'], ['blue', 'green', 'green'], ['blue', 'red', 'blue'], ['blue', 'green', 'blue'], ['blue', 'blue', 'green'], ['green', 'green', 'blue']];
-// const test_correct_2 = ['blue', 'red', 'red', 'blue', 'green', 'green', 'blue', 'blue', 'blue', 'green'];
-const learning_stimuli = [['red', 'blue', 'red'], ['green', 'blue', 'green'], ['green', 'green', 'red'], ['green', 'blue', 'blue'], ['red', 'blue', 'red'], ['green', 'blue', 'blue'], ['red', 'green', 'green'], ['green', 'green', 'red'], ['green', 'green', 'red'], ['red', 'green', 'green'], ['red', 'blue', 'red'], ['red', 'green', 'green'], ['blue', 'red', 'green'], ['blue', 'red', 'blue'], ['red', 'blue', 'green'], ['blue', 'red', 'blue'], ['green', 'red', 'blue'], ['blue', 'green', 'red'], ['blue', 'blue', 'green'], ['red', 'green', 'blue'], ['green', 'blue', 'green'], ['red', 'green', 'green'], ['green', 'blue', 'blue'], ['green', 'green', 'blue'], ['green', 'blue', 'blue'], ['red', 'green', 'green'], ['blue', 'green', 'blue'], ['red', 'blue', 'green'], ['green', 'red', 'red'], ['blue', 'red', 'blue'], ['blue', 'green', 'red'], ['blue', 'blue', 'green'], ['green', 'red', 'blue'], ['blue', 'blue', 'red'], ['red', 'blue', 'red'], ['red', 'blue', 'green'], ['blue', 'blue', 'green'], ['red', 'blue', 'green'], ['blue', 'blue', 'green'], ['red', 'red', 'blue']];
-const learning_correct = ['red', 'blue', 'red', 'green', 'red', 'green', 'green', 'red', 'red', 'green', 'red', 'green', 'red', 'blue', 'blue', 'blue', 'green', 'red', 'blue', 'red', 'blue', 'green', 'green', 'green', 'green', 'green', 'blue', 'blue', 'red', 'blue', 'red', 'blue', 'green', 'red', 'red', 'blue', 'blue', 'blue', 'blue', 'red'];
-const test_stimuli_1 = [['red', 'blue', 'blue'], ['green', 'red', 'blue'], ['red', 'green', 'green'], ['red', 'green', 'blue'], ['red', 'blue', 'red'], ['blue', 'green', 'green'], ['green', 'red', 'red'], ['blue', 'green', 'blue'], ['green', 'blue', 'blue'], ['red', 'red', 'green'], ['red', 'blue', 'red'], ['green', 'red', 'green'], ['green', 'red', 'green'], ['red', 'blue', 'blue'], ['red', 'green', 'blue'], ['red', 'blue', 'red'], ['red', 'red', 'blue'], ['red', 'blue', 'green'], ['blue', 'green', 'red'], ['red', 'red', 'green'], ['green', 'red', 'green'], ['blue', 'red', 'red'], ['blue', 'red', 'red'], ['blue', 'blue', 'green'], ['blue', 'red', 'green'], ['green', 'red', 'blue'], ['green', 'green', 'blue'], ['green', 'green', 'blue'], ['green', 'green', 'blue'], ['blue', 'green', 'red'], ['blue', 'green', 'blue'], ['blue', 'green', 'red'], ['green', 'green', 'blue'], ['blue', 'red', 'blue'], ['blue', 'green', 'red'], ['green', 'blue', 'red'], ['green', 'blue', 'blue'], ['blue', 'green', 'green'], ['red', 'green', 'red'], ['green', 'blue', 'green']];
-const test_correct_1 = ['red', 'green', 'green', 'red', 'red', 'green', 'red', 'blue', 'green', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'blue', 'red', 'red', 'red', 'red', 'red', 'blue', 'red', 'green', 'green', 'green', 'green', 'red', 'blue', 'red', 'green', 'blue', 'red', 'red', 'green', 'green', 'red', 'blue'];
-const test_stimuli_2 = [['red', 'green', 'green'], ['blue', 'red', 'red'], ['blue', 'red', 'blue'], ['blue', 'red', 'blue'], ['green', 'blue', 'red'], ['blue', 'blue', 'red'], ['green', 'blue', 'green'], ['blue', 'green', 'blue'], ['red', 'blue', 'red'], ['green', 'blue', 'red'], ['blue', 'blue', 'green'], ['red', 'green', 'blue'], ['red', 'blue', 'red'], ['blue', 'green', 'red'], ['blue', 'red', 'red'], ['green', 'green', 'blue'], ['green', 'blue', 'green'], ['green', 'blue', 'green'], ['green', 'blue', 'green'], ['red', 'blue', 'green'], ['red', 'green', 'blue'], ['green', 'green', 'blue'], ['green', 'green', 'blue'], ['red', 'red', 'blue'], ['green', 'blue', 'blue'], ['blue', 'green', 'red'], ['blue', 'blue', 'green'], ['blue', 'red', 'blue'], ['red', 'green', 'red'], ['red', 'blue', 'blue'], ['green', 'green', 'blue'], ['green', 'blue', 'red'], ['blue', 'green', 'blue'], ['red', 'red', 'green'], ['red', 'blue', 'blue'], ['green', 'green', 'red'], ['blue', 'green', 'green'], ['green', 'red', 'red'], ['green', 'blue', 'blue'], ['green', 'blue', 'green']];
-const test_correct_2 = ['green', 'red', 'blue', 'blue', 'red', 'red', 'blue', 'blue', 'red', 'red', 'blue', 'red', 'red', 'red', 'red', 'green', 'blue', 'blue', 'blue', 'blue', 'red', 'green', 'green', 'red', 'green', 'red', 'blue', 'blue', 'red', 'red', 'green', 'red', 'blue', 'red', 'red', 'red', 'green', 'red', 'green', 'blue'];
+//const secret_rule = { cue_location: 1, color_map: { red: 2, green: 0, blue: 1 } };
+const secret_rule = sampleSecretRule();
+const learning_stimuli = generateStimuli(N);
+const learning_correct = determineCorrectColor(learning_stimuli, secret_rule.cue_location, secret_rule.color_map);
+const test_stimuli_1 = generateStimuli(N);
+const test_correct_1 = determineCorrectColor(test_stimuli_1, secret_rule.cue_location, secret_rule.color_map);
+//const secret_rule_2 = { cue_location: 1, color_map: { red: 2, green: 0, blue: 1 } };
+const secret_rule_2 = sampleSecretRule();
+const test_stimuli_2 = generateStimuli(N);
+const test_correct_2 = determineCorrectColor(test_stimuli_2, secret_rule_2.cue_location, secret_rule_2.color_map);
 
 const press_space_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to continue</b></p>";
 const press_space_start_text = "<p><b style='font-size:20px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to START</b></p>";
@@ -118,69 +220,6 @@ const thank_you_frame = {
     trial_duration: 100,
 };
 
-////// FUNCTIONS //////
-
-function drawDots(canvas, colors) {
-    let ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    let positions = [
-        {x: canvas.width / 4 - 40, y: (canvas.height * 3) / 4}, // Bottom-left dot
-        {x: canvas.width / 2, y: canvas.height / 4},  // Top dot
-        {x: (canvas.width * 3) / 4 + 40, y: (canvas.height * 3) / 4} // Bottom-right dot
-    ];
-    
-    for (let i = 0; i < colors.length; i++) {
-        ctx.beginPath();
-        ctx.arc(positions[i].x, positions[i].y, 30, 0, Math.PI * 2);
-        ctx.fillStyle = colors[i];
-        ctx.strokeStyle = colors[i];
-        ctx.fill();
-        ctx.stroke();
-    }
-}   
-
-function rgbToColorName(key) {
-    if (key === 'r') return 'red';
-    if (key === 'g') return 'green';
-    if (key === 'b') return 'blue';
-    return 'SCRIPT ERROR';
-  }
-
-
-function generateNewDemoTrial() {
-    const colors = jsPsych.randomization.sampleWithoutReplacement(['red', 'red', 'green', 'green', 'blue', 'blue'], 3);
-    const positions = ['LEFT', 'TOP', 'RIGHT'];
-    const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
-    let shuffled_positions = jsPsych.randomization.shuffle(positions);
-    let color_map = {
-        green: shuffled_positions[0],
-        red: shuffled_positions[1],
-        blue: shuffled_positions[2],
-    };
-    let dot_positions = {
-        LEFT: 0,
-        TOP: 1,
-        RIGHT: 2
-    };
-    let cue_color = colors[dot_positions[cue_location]];
-    let target_location = color_map[cue_color];
-    let correct_color = colors[dot_positions[target_location]];
-
-    const prompt = `
-        <p>The cue is the <strong>${cue_location}</strong> dot.</p>
-        <p>A green cue refers to the <strong>${color_map.green}</strong> dot, 
-        a red cue refers to the <strong>${color_map.red}</strong> dot, 
-        and a blue cue refers to the <strong>${color_map.blue}</strong> dot.</p>
-        <p>Given this rule, please indicate the correct color.</p>
-    `;
-
-    return {
-        colors,
-        prompt,
-        correct_color
-    };
-}
 
 ///// EXPERIMENT /////
 
@@ -263,7 +302,7 @@ for (let condition of randomized_conditions) {
 
         timeline.push(condition_1_instructions);
 
-        for (let i = 0; i < learning_stimuli.length; i++) {
+        for (let i = 0; i < N; i++) {
 
             let trial_data = {
                 participant_id: participant_id,
@@ -346,7 +385,7 @@ for (let condition of randomized_conditions) {
 
         timeline.push(condition_2_instructions);
 
-        for (let i = 0; i < test_stimuli_2.length; i++) {
+        for (let i = 0; i < N; i++) {
 
             let trial_data = {
                 participant_id: participant_id,
@@ -367,17 +406,6 @@ for (let condition of randomized_conditions) {
                     trial_data.rt_test = data.rt;
                 }
             };
-
-            // const feedback_frame = {
-            //     type: jsPsychHtmlKeyboardResponse,
-            //     stimulus: function() {
-            //         // return "Your response: " + trial_data.test_response + lineBreak + "Correct answer: " + trial_data.test_correct; (the color words should be colored)
-            //         return `<p>Your response: <b style="color:${trial_data.test_response};">${trial_data.test_response}</b></p>` +
-            //             `<p>Correct answer: <b style="color:${trial_data.test_correct};">${trial_data.test_correct}</b></p>`;
-            //     },
-            //     choices: 'NO_KEYS',
-            //     trial_duration: 2000,
-            // };
 
             const feedback_frame = {
                 type: jsPsychCanvasKeyboardResponse,
