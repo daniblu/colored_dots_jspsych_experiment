@@ -184,19 +184,19 @@ const instructions = {type: jsPsychInstructions,
 
 const post_demo_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual experiment will follow on the next page.</p>${press_space_text}`,
+    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual experiment will follow on the next page. Please note, that you are not allowed to write anything down to aid you in this experiment.</p>${press_space_text}`,
     choices: [' ']
 };
 
 const condition_1_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">A new secret rule has now been set. It will remain unchanged throughout the following rounds. Here is how each round will proceed: You will be shown three dots and you will be told which color is correct. Based on this, you must try to identify the secret rule. In each round, your understanding of the secret rule will be tested on a different set of dots. You should strive to get as many correct responses as possible, although you will not be told whether your response was correct or incorrect. There is no time limit.</p>${press_space_start_text}`,
+    stimulus: `<p style="text-align: left;"><strong>A new secret rule has now been set.</strong> The rule will remain unchanged until it is clearly stated that it changes. Here is how each round will proceed: You will be shown three dots and you will be told which color is correct. Based on this, you must try to identify the secret rule. In each round, your understanding of the secret rule will be tested on a different set of dots. You should strive to get as many correct responses as possible, although you will not be told whether your response was correct or incorrect. There is no time limit.</p>${press_space_start_text}`,
     choices: [' ']
 };
 
 const condition_2_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">A new secret rule has now been set. It will remain unchanged throughout the following rounds. Here is how each round will proceed: You will see three dots and must report which color you think is the correct one. Based on the feedback, you must try to identify the secret rule. You should strive to get as many correct responses as possible. There is no time limit.</p>${press_space_start_text}`,
+    stimulus: `<p style="text-align: left;"><strong>A new secret rule has now been set.</strong> The rule will remain unchanged until it is clearly stated that it changes. Here is how each round will proceed: You will see three dots and must report which color you think is the correct one. Based on the feedback, you must try to identify the secret rule. You should strive to get as many correct responses as possible. There is no time limit.</p>${press_space_start_text}`,
     choices: [' ']
 };
 
