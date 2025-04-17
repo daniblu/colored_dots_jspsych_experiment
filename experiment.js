@@ -133,7 +133,7 @@ function generateNewDemoTrial() {
 
 ///// DEFINE CONSTANTS OF THE EXPERIMENT /////
 
-const N = 4
+const N = 40
 const participant_id = jsPsych.randomization.randomID(10);
 const conditions = [1, 2];
 const randomized_conditions = jsPsych.randomization.shuffle(conditions);
