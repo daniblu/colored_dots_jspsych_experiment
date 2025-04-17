@@ -7,7 +7,7 @@ const jsPsych = initJsPsych({
         const experiment_data = jsPsych.data.get().filterCustom(trial => {
         return trial.participant_id !== undefined;
         }).json();
-        fetch("https://script.google.com/macros/s/AKfycbzuiMGal5DclCbFGQFJ9PtZwpIqs1XBIAITLKyi_jvKWe7Csj2Xk7oC2Z5tv4vc-kPh/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbxhxvrtcdPNpmSIrWIzHdnvmqkm_CIGmm56L3l4uEFQCxkkFONatFt33wme95UOu6W2/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
@@ -133,7 +133,7 @@ function generateNewDemoTrial() {
 
 ///// DEFINE CONSTANTS OF THE EXPERIMENT /////
 
-const N = 40
+const N = 40;
 const participant_id = jsPsych.randomization.randomID(10);
 const conditions = [1, 2];
 const randomized_conditions = jsPsych.randomization.shuffle(conditions);
