@@ -7,14 +7,13 @@ const jsPsych = initJsPsych({
         const experiment_data = jsPsych.data.get().filterCustom(trial => {
         return trial.participant_id !== undefined;
         }).json();
-        fetch("https://script.google.com/macros/s/AKfycbwMy_WEkTTpaYqz0aA8zTDrajwE7j_tHmUAAvWE_rxvBnuOWov144zltm8iG-Iaqjo6/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbzuiMGal5DclCbFGQFJ9PtZwpIqs1XBIAITLKyi_jvKWe7Csj2Xk7oC2Z5tv4vc-kPh/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ data: experiment_data })
         });
         console.log("Data sent to Google Sheets");  // Debugging
-        console.log(experiment_data);
     }
 });
 
@@ -94,6 +93,7 @@ function determineCorrectColor(stimuli, cue_location, color_map) {
 }
 
 function generateNewDemoTrial() {
+
     const colors = jsPsych.randomization.sampleWithoutReplacement(['yellow', 'yellow', 'green', 'green', 'blue', 'blue', 'violet', 'violet'], 4);
     const positions = ['TOP', 'RIGHT', 'BOTTOM', 'LEFT'];
     const cue_location = jsPsych.randomization.sampleWithoutReplacement(positions, 1)[0];
@@ -133,24 +133,31 @@ function generateNewDemoTrial() {
 
 ///// DEFINE CONSTANTS OF THE EXPERIMENT /////
 
-const N = 40
+const N = 4
 const participant_id = jsPsych.randomization.randomID(10);
 const conditions = [1, 2];
 const randomized_conditions = jsPsych.randomization.shuffle(conditions);
 
 //const secret_rule = { cue_location: 1, color_map: { red: 2, green: 0, blue: 1 } };
-const secret_rule = sampleSecretRule();
+const secret_rule_1 = sampleSecretRule();
 const learning_stimuli = generateStimuli(N);
-const learning_correct = determineCorrectColor(learning_stimuli, secret_rule.cue_location, secret_rule.color_map);
+const learning_correct = determineCorrectColor(learning_stimuli, secret_rule_1.cue_location, secret_rule_1.color_map);
 const test_stimuli_1 = generateStimuli(N);
-const test_correct_1 = determineCorrectColor(test_stimuli_1, secret_rule.cue_location, secret_rule.color_map);
+const test_correct_1 = determineCorrectColor(test_stimuli_1, secret_rule_1.cue_location, secret_rule_1.color_map);
 //const secret_rule_2 = { cue_location: 1, color_map: { red: 2, green: 0, blue: 1 } };
 const secret_rule_2 = sampleSecretRule();
 const test_stimuli_2 = generateStimuli(N);
 const test_correct_2 = determineCorrectColor(test_stimuli_2, secret_rule_2.cue_location, secret_rule_2.color_map);
 
+var likert_scale = [
+    "Strongly Disagree", 
+    "Disagree", 
+    "Neutral", 
+    "Agree", 
+    "Strongly Agree"
+];
+
 const press_space_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to continue</b></p>";
-const press_space_start_text = "<p><b style='font-size:20px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press SPACE to START</b></p>";
 const press_YGBV_text = "<p><b style='font-size:14px; position: absolute; bottom: 0; left: 0; width: 100%; text-align: center;'>Press Y, G, B, or V</b></p>";
 
 const informed_consent_text = "<p style='text-align: left; font-size:13px;'>I voluntarily agree to participate in this study by engaging in a behavioral task and providing responses to the follow-up questions. I am informed that the experiment is hosted via GitHub Pages and all data is transmitted securely to a Google Sheet using Google Apps Script, where the data is stored temporarily in accordance with standard data protection practices on Google's cloud infrastructure. I am informed that the data will be analyzed anonymously by Aarhus University. I acknowledge that no personally identifiable information will be collected. I agree that my anonymized data may be used for research purposes and stored for a minimum of 10 years. I have had sufficient time to consider my participation and am prepared to proceed with the study. I understand that my participation is voluntary, and I may withdraw at any time during the study without needing to provide a reason, and this will have no negative consequences for me. I have carefully read the study’s participant information and this consent declaration.</p><p style='text-align: left; font-size:13px;'>ONCE YOU CLICK THE CONSENT BUTTON, THE EXPERIMENT WILL GO INTO FULLSCREEN. YOU CAN EXIT AT ANY TIME BY PRESSING ESC.</p>"
@@ -179,9 +186,15 @@ const cursor_on = {
     }
 };
 
-const instructions = {type: jsPsychInstructions,
+const survey_instructions = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p style="text-align: left;">To start out, please answer the questions on the following pages.</p>${press_space_text}`,
+    choices: [' ']
+};
+
+const task_instructions = {type: jsPsychInstructions,
     pages: [
-    '<p style="text-align: left;">In this experiment, you will be shown sets of four colored dots. Your task is to choose the correct color. The dots will be <b style="color:yellow;">yellow</b>, <b style="color:green;">green</b>, <b style="color:blue;">blue</b>, or <b style="color:violet;">violet</b>, and dots of the same color can appear together. There is a secret rule that enables you to identify the correct color among the four dots.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">→</p>',
+    '<p style="text-align: left;">Next up you will be playing a game. In this game, you will be shown sets of four colored dots. Your task is to choose the correct color. The dots will be <b style="color:yellow;">yellow</b>, <b style="color:green;">green</b>, <b style="color:blue;">blue</b>, or <b style="color:violet;">violet</b>, and dots of the same color can appear together. There is a secret rule that enables you to identify the correct color among the four dots.</p>' + '<br>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">→</p>',
     '<img src="images/example_stimulus_4_1.png", style="width:355px; height:346px"></img>' + '<p style="text-align: left;">Here is an example of a set of dots. For instance, the secret rule could be that the color of the bottom dot, always tells you which dot has the correct color. The rule further dictates that if the bottom dot (the cue) is yellow, the left dot has the correct color. If it is green, the top dot has the correct color. If it is blue, the right dot has the correct color, and if it is violet, the bottom dot has the correct color. Given this rule, the correct color in this case would be green.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
     '<img src="images/example_stimulus_4_2.png", style="width:357px; height:347px"></img>' + '<p style="text-align: left;">Here is another example of a set of dots. Given the same rule as before (you may go back and remind yourself), the correct color in this case would be yellow.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>',
     '<p style="text-align: left;">The secret rule always has the same structure. That is, one of the dot locations (top, bottom, right, or left ) will always serve as a cue for which dot has the correct color, and each color of the cue will always uniquely refer to one of the four dots (for example, if the cue dot is green, that will always refer to the left dot).</p>' + '<p style="text-align: left;">On the following pages, you will get to familiarize yourself with the task. You will get told what the rule is, and must indicate the correct color based on it.</p>' + '<p style="position: absolute; bottom: 0; left: 0; width: 100%; font-size:30px;">←  →</p>'
@@ -191,19 +204,19 @@ const instructions = {type: jsPsychInstructions,
 
 const post_demo_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual experiment will follow on the next page. Please note, that you are not allowed to write anything down to aid yourself in this experiment.</p>${press_space_text}`,
+    stimulus: `<p style="text-align: left;">You have completed the test rounds. Further instructions for the actual game will follow on the next page. Please note, that you are not allowed to write anything down to aid yourself in this game.</p>${press_space_text}`,
     choices: [' ']
 };
 
 const condition_1_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;"><strong>A new secret rule has now been set.</strong> The rule will remain unchanged until it is clearly stated that it changes. Here is how each round will proceed: You will be shown three dots and you will be told which color is correct. Based on this, you must try to identify the secret rule. In each round, your understanding of the secret rule will be tested on a different set of dots. You should strive to get as many correct responses as possible, although you will not be told whether your response was correct or incorrect. There is no time limit.</p>${press_space_start_text}`,
+    stimulus: `<p style="text-align: left;"><strong>A new secret rule has now been set.</strong> The rule will remain unchanged until it is clearly stated that it changes. Here is how each round will proceed: You will be shown four dots and you will be told which color is correct. Based on this, you must try to identify the secret rule. In each round, your understanding of the secret rule will be tested on a different set of dots. You should strive to get as many correct responses as possible, although you will not be told whether your response was correct or incorrect. There is no time limit.</p>${press_space_text}`,
     choices: [' ']
 };
 
 const condition_2_instructions = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<p style="text-align: left;"><strong>A new secret rule has now been set.</strong> The rule will remain unchanged until it is clearly stated that it changes. Here is how each round will proceed: You will see three dots and must report which color you think is the correct one. Based on the feedback, you must try to identify the secret rule. You should strive to get as many correct responses as possible. There is no time limit.</p>${press_space_start_text}`,
+    stimulus: `<p style="text-align: left;"><strong>A new secret rule has now been set.</strong> The rule will remain unchanged until it is clearly stated that it changes. Here is how each round will proceed: You will be shown four dots and must report which color you think is the correct one. Based on the feedback, you must try to identify the secret rule. You should strive to get as many correct responses as possible. There is no time limit.</p>${press_space_text}`,
     choices: [' ']
 };
 
@@ -231,8 +244,61 @@ const thank_you_frame = {
 ///// EXPERIMENT /////
 
 timeline.push(consent_form);
-timeline.push(cursor_off);
-timeline.push(instructions);
+
+let survey_data = {
+    participant_id: participant_id,
+    secret_rule_1: JSON.stringify(secret_rule_1),
+    secret_rule_2: JSON.stringify(secret_rule_2),
+};
+
+const survey_demographics = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+      {
+        prompt: "Which gender do you identify with?",
+        name: 'gender',  
+        options: ['Female', 'Male', 'Other'],
+        required: true,
+      },
+      {
+        prompt: "Which age group do you belong to?",
+        name: 'age',
+        options: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+        required: true,
+      },
+      {
+        prompt: "Please mark the highest level of education you have completed.",
+        name: 'education',
+        options: ['No formal education', 'Primary education (DA: Folkeskole)', 'Secondary education (DA: HF, STX,...)', 'Vocational training (DA: Erhvervsuddannelse)', 'Bachelor\'s degree', 'Master\'s degree', 'Doctorate'],
+        required: true,
+      },
+      {
+        prompt: "If you recall, what is approximately your grade point average (DA: karaktergennemsnit) in your current or most recent education? You are welcome to skip this question if you are unsure.",
+        name: 'gpa',
+        options: ['<0', '0-2', '2-4', '4-7', '7-10', '10-12'],
+        required: false,
+      }
+    ],
+      on_finish: function(data) {
+        survey_data.gender = data.response.gender;
+        survey_data.age = data.response.age;
+        survey_data.education = data.response.education;
+        survey_data.gpa = data.response.gpa;
+      }
+  };
+
+const survey_monitoring_ability = {
+    type: jsPsychHtmlSliderResponse,
+    stimulus: "<p style='text-align:left;'> People differ in how much they monitor their own learning, when they have to learn new material - for example in school or at work. Monitoring your own learning involves making a judgement of how well you have understood the new material. According to yourself, how accurate are you in assessing how well you have understood something in general? To help you answer this question, consider, for example, how good you are at predicting your exam scores.</p>",
+    labels: ['Very poor', 'Excellent'],
+    slider_width: 620,
+    on_finish: function(data) {
+        survey_data.survey_monitoring_ability = data.response;
+        jsPsych.data.write(survey_data);
+    }
+} 
+
+timeline.push(survey_instructions, survey_demographics, survey_monitoring_ability, cursor_off, task_instructions);
 
 // DEMO TRIALS – 3 consecutive correct responses required
 let correctStreak = 0;
@@ -309,6 +375,28 @@ for (let condition of randomized_conditions) {
     if (condition === 1) {
 
         timeline.push(condition_1_instructions);
+
+        const survey_self_efficacy = {
+            type: jsPsychSurveyLikert,
+            questions: [
+                {prompt: "I'm confident I will discover the secret rule during this game.", name: 'self_efficacy', labels: likert_scale},
+                {prompt: "I expect to do well in this game.", name: 'expectancy_for_success', labels: likert_scale},
+            ],
+            randomize_question_order: true,
+            button_label: "START game",
+            preamble: "<p style='text-align: left;'>Before we start, please answer the following questions:</p>",
+            on_finish: function(data) {
+                let motivation_data = {
+                    participant_id: participant_id,
+                    condition: condition,
+                    self_efficacy: data.response.self_efficacy,
+                    expectancy_for_success: data.response.expectancy_for_success,
+                };
+                jsPsych.data.write(motivation_data);
+            }
+        };
+            
+        timeline.push(cursor_on, survey_self_efficacy, cursor_off, black_frame);
 
         for (let i = 0; i < N; i++) {
 
@@ -392,6 +480,28 @@ for (let condition of randomized_conditions) {
     } else if (condition === 2) {
 
         timeline.push(condition_2_instructions);
+
+        const survey_self_efficacy = {
+            type: jsPsychSurveyLikert,
+            questions: [
+                {prompt: "I'm confident I will discover the secret rule during this game.", name: 'self_efficacy', labels: likert_scale},
+                {prompt: "I expect to do well in this game.", name: 'expectancy_for_success', labels: likert_scale},
+            ],
+            randomize_question_order: true,
+            button_label: "START game",
+            preamble: "<p style='text-align: left;'>Before we start, please answer the following questions:</p>",
+            on_finish: function(data) {
+                let motivation_data = {
+                    participant_id: participant_id,
+                    condition: condition,
+                    self_efficacy: data.response.self_efficacy,
+                    expectancy_for_success: data.response.expectancy_for_success,
+                };
+                jsPsych.data.write(motivation_data);
+            }
+        };
+            
+        timeline.push(cursor_on, survey_self_efficacy, cursor_off, black_frame);
 
         for (let i = 0; i < N; i++) {
 
