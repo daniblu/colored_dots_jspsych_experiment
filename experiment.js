@@ -7,7 +7,7 @@ const jsPsych = initJsPsych({
         const experiment_data = jsPsych.data.get().filterCustom(trial => {
         return trial.participant_id !== undefined;
         }).json();
-        fetch("https://script.google.com/macros/s/AKfycbxhxvrtcdPNpmSIrWIzHdnvmqkm_CIGmm56L3l4uEFQCxkkFONatFt33wme95UOu6W2/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbyq2UobfQWCJZdaG5yRCkhQBHk7Fgbjr1E0ev8qUbCFL1w9Xm0JYKdOcOqXmg5bexn4/exec", {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
@@ -133,7 +133,7 @@ function generateNewDemoTrial() {
 
 ///// DEFINE CONSTANTS OF THE EXPERIMENT /////
 
-const N = 40;
+const N = 30;
 const participant_id = jsPsych.randomization.randomID(10);
 const conditions = [1, 2];
 const randomized_conditions = jsPsych.randomization.shuffle(conditions);
@@ -294,11 +294,43 @@ const survey_monitoring_ability = {
     slider_width: 620,
     on_finish: function(data) {
         survey_data.survey_monitoring_ability = data.response;
+    }
+}
+
+const survey_epistemic_beliefs = {
+    type: jsPsychSurveyLikert,
+    questions: [
+        {prompt: "Too many theories only complicate things.", name: '10', labels: likert_scale},
+        {prompt: "The best ideas are usually the simplest.", name: '11', labels: likert_scale},
+        {prompt: "Teachers should focus on individual facts rather than complex theories.", name: '12', labels: likert_scale},
+        {prompt: "Things are simpler than most teachers would have you believe.", name: '17', labels: likert_scale},
+        {prompt: "Most of what is written in textbooks can be trusted.", name: '4', labels: likert_scale},
+        {prompt: "The knowledge of teachers can generally be accepted.", name: '7', labels: likert_scale},
+        {prompt: "When an authority figure tells me what to do, I usually follow it.", name: '25', labels: likert_scale},
+        {prompt: "A person's intellectual potential is determined at birth.", name: '5', labels: likert_scale},
+        {prompt: "Truly smart learners don’t have to work too hard to do well in their studies.", name: '8', labels: likert_scale},
+        {prompt: "How well someone does in their studies depends on how smart they are.", name: '14', labels: likert_scale},
+        {prompt: "Clever people are born that way.", name: '24', labels: likert_scale},
+        {prompt: "Even someone who learns slowly can understand a topic deeply.", name: '9', labels: likert_scale},
+        {prompt: "If you don’t understand a topic right away, you probably never will.", name: '15', labels: likert_scale},
+        {prompt: "The ability to learn can be developed.", name: '16', labels: likert_scale},
+        {prompt: "If two people have different opinions, at least one of them must be wrong.", name: '18', labels: likert_scale},
+        {prompt: "When I prepare for a presentation, I’m reluctant to rely on just one source of knowledge.", name: '19', labels: likert_scale},
+        {prompt: "If you didn’t understand a topic the first time, going through it again probably won’t help much.", name: '20', labels: likert_scale},
+        {prompt: "Concepts can be learned better when they are related to personal experiences.", name: '26', labels: likert_scale},
+        {prompt: "It’s a waste of time to work on problems that don’t have a quick solution.", name: '27', labels: likert_scale},
+        {prompt: "When two people are discussing something, one of them will quickly adopt the other’s opinion.", name: '31', labels: likert_scale},
+    ],
+    randomize_question_order: true,
+    button_label: "Continue",
+    preamble: "<p style='text-align: left;'>This section is about your beliefs about the nature of knowlegde and how it is acquired. Please indicate how strongly you agree or disagree with each of the following statements. Scroll down to see all questions.</p>",
+    on_finish: function(data) {
+        survey_data.epistemic_beliefs = JSON.stringify(data.response);
         jsPsych.data.write(survey_data);
     }
-} 
+};
 
-timeline.push(survey_instructions, survey_demographics, survey_monitoring_ability, cursor_off, task_instructions);
+timeline.push(survey_instructions, survey_demographics, survey_monitoring_ability, survey_epistemic_beliefs, cursor_off, task_instructions);
 
 // DEMO TRIALS – 3 consecutive correct responses required
 let correctStreak = 0;
@@ -384,7 +416,7 @@ for (let condition of randomized_conditions) {
             ],
             randomize_question_order: true,
             button_label: "START game",
-            preamble: "<p style='text-align: left;'>Before we start, please answer the following questions:</p>",
+            preamble: "<p style='text-align: left;'>Before you start, please answer the following questions:</p>",
             on_finish: function(data) {
                 let motivation_data = {
                     participant_id: participant_id,
@@ -459,7 +491,7 @@ for (let condition of randomized_conditions) {
                 const rule_frame = {
                     type: jsPsychSurveyText,
                     questions: [
-                        {prompt: "Briefly write your best guess(es) of what you think (part of) the secret rule is at this point. If you have no idea, you may leave the field empty.", rows: 4, columns: 60}
+                        {prompt: "Briefly write your best guess(es) of what you think (part of) the secret rule is at this point. If you have no idea, you may leave the field empty. Note, the rule does NOT change after this screen.", rows: 4, columns: 60}
                     ],
                     on_finish: function(data) {
                         trial_data.rule_guess = data.response.Q0;
@@ -489,7 +521,7 @@ for (let condition of randomized_conditions) {
             ],
             randomize_question_order: true,
             button_label: "START game",
-            preamble: "<p style='text-align: left;'>Before we start, please answer the following questions:</p>",
+            preamble: "<p style='text-align: left;'>Before you start, please answer the following questions:</p>",
             on_finish: function(data) {
                 let motivation_data = {
                     participant_id: participant_id,
@@ -553,7 +585,7 @@ for (let condition of randomized_conditions) {
                 const rule_frame = {
                     type: jsPsychSurveyText,
                     questions: [
-                        {prompt: "Briefly write your best guess(es) of what you think (part of) the secret rule is at this point. If you have no idea, you may leave the field empty.", rows: 4, columns: 60}
+                        {prompt: "Briefly write your best guess(es) of what you think (part of) the secret rule is at this point. If you have no idea, you may leave the field empty. Note, the rule does NOT change after this screen.", rows: 4, columns: 60}
                     ],
                     on_finish: function(data) {
                         trial_data.rule_guess = data.response.Q0;
