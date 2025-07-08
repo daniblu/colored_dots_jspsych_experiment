@@ -7,5 +7,5 @@ The experiment was adapted from the article _Active Inference, Curiosity, and In
 The figure below is a schematic overview of the experimental procedure, which has two conditions.
 
 ### Try the Experiment
-Opening the file ``experiment.js`` in a browser will initiate the experiment. Alternatively, the experiment can be found at this link: https://daniblu.github.io/colored_dots_jspsych_experiment/
+Opening the file ``experiment.js`` in a browser will initiate the experiment. Alternatively, the experiment can be found at this link: https://daniblu.github.io/colored_dots_jspsych_experiment/.
 Data storage has been disabled.
