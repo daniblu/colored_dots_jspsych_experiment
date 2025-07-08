@@ -2,19 +2,20 @@
 
 // Initialize jsPsych
 const jsPsych = initJsPsych({
-    on_finish: function() {
-        // Keep only trials where participant_id is defined
-        const experiment_data = jsPsych.data.get().filterCustom(trial => {
-        return trial.participant_id !== undefined;
-        }).json();
-        fetch("https://script.google.com/macros/s/AKfycbyq2UobfQWCJZdaG5yRCkhQBHk7Fgbjr1E0ev8qUbCFL1w9Xm0JYKdOcOqXmg5bexn4/exec", {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ data: experiment_data })
-        });
-        console.log("Data sent to Google Sheets");  // Debugging
-    }
+    // Uncomment to enable data saving to Google Sheets
+    // on_finish: function() {
+    //     // Keep only trials where participant_id is defined
+    //     const experiment_data = jsPsych.data.get().filterCustom(trial => {
+    //     return trial.participant_id !== undefined;
+    //     }).json();
+    //     fetch("https://script.google.com/macros/s/AKfycbyq2UobfQWCJZdaG5yRCkhQBHk7Fgbjr1E0ev8qUbCFL1w9Xm0JYKdOcOqXmg5bexn4/exec", {
+    //         method: "POST",
+    //         mode: "no-cors",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({ data: experiment_data })
+    //     });
+    //     console.log("Data sent to Google Sheets");  // Debugging
+    // }
 });
 
 // Initialize timeline
